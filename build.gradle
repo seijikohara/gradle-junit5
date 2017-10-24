@@ -1,0 +1,46 @@
+group 'net.relaxism.sample'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext {
+        junitPlatformVersion = '1.0.1'
+        junitJupiterVersion = '5.0.1'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.junit.platform:junit-platform-gradle-plugin:${junitPlatformVersion}"
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+compileTestJava {
+    sourceCompatibility = targetCompatibility = 9
+    options.compilerArgs += '-parameters'
+}
+
+dependencies {
+    // JUnit Jupiter API and TestEngine implementation
+    testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
+
+    // To avoid compiler warnings about @API annotations in JUnit code
+    testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
+
+    // Only needed to run tests in an (IntelliJ) IDE(A) that bundles an older version
+    testRuntime "org.junit.platform:junit-platform-launcher:${junitPlatformVersion}"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.2.1'
+    distributionType = Wrapper.DistributionType.ALL
+}
